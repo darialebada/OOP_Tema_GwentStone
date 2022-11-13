@@ -1,5 +1,6 @@
 package main;
 
+import actions.GameActions;
 import actions.PrepareGame;
 import cards.Card;
 import checker.Checker;
@@ -75,6 +76,10 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         //TODO add here the entry point to your implementation
+        ArrayList<ArrayList<Card>> decksPlayerOne = PrepareGame.prepareDecks(inputData.getPlayerOneDecks());
+        ArrayList<ArrayList<Card>> decksPlayerTwo = PrepareGame.prepareDecks(inputData.getPlayerTwoDecks());
+
+        ArrayList<GameActions> gameActions = PrepareGame.prepareActions(inputData.getGames());
 
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
