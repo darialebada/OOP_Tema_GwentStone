@@ -1,7 +1,9 @@
 package cards;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
 public class Card {
     private int mana;
     private int attackDamage;
@@ -19,13 +21,20 @@ public class Card {
         this.health = card.health;
         this.attackDamage = card.attackDamage;
         this.description = card.description;
-        this.colors = card.colors;
+        this.colors = new ArrayList<String>(card.colors);
         this.name = card.name;
     }
     public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
         this.health = health;
         this.attackDamage = attackDamage;
+        this.description = description;
+        this.colors = colors;
+        this.name = name;
+    }
+
+    public Card(int mana, String description, ArrayList<String> colors, String name) {
+        this.mana = mana;
         this.description = description;
         this.colors = colors;
         this.name = name;
@@ -77,26 +86,5 @@ public class Card {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return  "{"
-                +  "mana="
-                + mana
-                +  ", attackDamage="
-                + attackDamage
-                + ", health="
-                + health
-                +  ", description='"
-                + description
-                + '\''
-                + ", colors="
-                + colors
-                + ", name='"
-                +  ""
-                + name
-                + '\''
-                + '}';
     }
 }

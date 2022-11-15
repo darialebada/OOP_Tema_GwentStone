@@ -19,8 +19,7 @@ public class PrepareGame {
             ArrayList<Card> newDeck = new ArrayList<Card>();
             ArrayList<CardInput> readDeck = decksInput.getDecks().get(i);
             for (int j = 0; j < decksInput.getNrCardsInDeck(); j++) {
-                Card card = new Card(prepareCard(readDeck.get(j)));
-                newDeck.add(card);
+                newDeck.add(prepareCard(readDeck.get(j)));
             }
             decksPlayer.add(newDeck);
         }
@@ -100,9 +99,12 @@ public class PrepareGame {
         ArrayList<GameActions> games = new ArrayList<GameActions>();
         for (int i = 0; i < readGame.size(); i++) {
             StartGameInput readStartGame = readGame.get(i).getStartGame();
+
             StartGame startGame = new StartGame(readStartGame.getPlayerOneDeckIdx(), readStartGame.getPlayerTwoDeckIdx(),
-                                                readStartGame.getShuffleSeed(), new Card(prepareCard(readStartGame.getPlayerOneHero())),
-                                                new Card(prepareCard(readStartGame.getPlayerTwoHero())), readStartGame.getStartingPlayer());
+                                                readStartGame.getShuffleSeed(), prepareCard(readStartGame.getPlayerOneHero()),
+                                                prepareCard(readStartGame.getPlayerTwoHero()), readStartGame.getStartingPlayer());
+
+
             GameActions ggame = new GameActions();
             ggame.setStartGame(startGame);
             ArrayList<Action> actions = new ArrayList<Action>();
@@ -116,6 +118,8 @@ public class PrepareGame {
             ggame.setActions(actions);
             games.add(ggame);
         }
+      //  System.out.println(games.get(0).getStartGame().getPlayerOneHero().toString());
+     //   System.out.println("\n");
         return games;
     }
 }

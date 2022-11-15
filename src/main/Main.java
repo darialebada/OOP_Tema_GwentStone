@@ -3,6 +3,7 @@ package main;
 import actions.GameActions;
 import actions.PrepareGame;
 import cards.Card;
+import cards.Winterfell;
 import checker.Checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

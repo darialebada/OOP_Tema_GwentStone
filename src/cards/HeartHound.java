@@ -1,7 +1,10 @@
 package cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties({ "health", "attackDamage", "ability" })
 public class HeartHound extends Card {
     private String ability;
     /**
@@ -19,4 +22,5 @@ public class HeartHound extends Card {
     public void setAbility(String ability) {
         this.ability = ability;
     }
+
 }

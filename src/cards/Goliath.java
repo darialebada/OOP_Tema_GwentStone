@@ -1,7 +1,10 @@
 package cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties({ "ability", "row", "frozen" })
 public class Goliath extends Card {
     private int row;
     private boolean frozen;

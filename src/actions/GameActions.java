@@ -6,6 +6,10 @@ public class GameActions {
     private StartGame startGame;
     private ArrayList<Action> actions;
 
+    public GameActions(){
+
+    }
+
     public StartGame getStartGame() {
         return startGame;
     }

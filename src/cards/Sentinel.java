@@ -1,7 +1,10 @@
 package cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties({ "row", "frozen" })
 public class Sentinel extends Card {
     private int row;
     private boolean frozen;

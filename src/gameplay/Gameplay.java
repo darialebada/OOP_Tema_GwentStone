@@ -42,6 +42,8 @@ public class Gameplay {
             for (int j = 0; j < actions.size(); j++) {
                 if (actions.get(j).getCommand().equals("getPlayerDeck")) {
                     getPlayerDeck(actions.get(j).getPlayerIdx());
+                } else if (actions.get(j).getCommand().equals("getPlayerHero")) {
+                    getPlayerHero(actions.get(j).getPlayerIdx(), startGame);
                 }
             }
 
@@ -68,11 +70,27 @@ public class Gameplay {
         } else {
             deck = new ArrayList<Card>(deckPlayerTwoGame);
         }
+
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode node = objectMapper.createObjectNode();
         node.put("command", "getPlayerDeck");
         node.put("playerIdx", playerIdx);
-        node.set("output", objectMapper.convertValue(deck, JsonNode.class));
+        node.putPOJO("output", deck);
+        output.add(node);
+    }
+
+    public void getPlayerHero(int playerIdx, StartGame startGame) {
+        Card hero;
+        if(playerIdx == 1) {
+            hero = startGame.getPlayerOneHero();
+        } else {
+            hero = startGame.getPlayerTwoHero();
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getPlayerHero");
+        node.put("playerIdx", playerIdx);
+        node.putPOJO("output", hero);
         output.add(node);
     }
 

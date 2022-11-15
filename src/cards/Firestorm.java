@@ -1,7 +1,10 @@
 package cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties({ "health", "attackDamage", "ability" })
 public class Firestorm extends Card {
     private String ability;
     /**
@@ -18,5 +21,22 @@ public class Firestorm extends Card {
 
     public void setAbility(String ability) {
         this.ability = ability;
+    }
+
+    @Override
+    public String toString() {
+        return  "{"
+                +  "mana="
+                + super.getMana()
+                +  ", description='"
+                + super.getDescription()
+                + '\''
+                + ", colors="
+                + super.getColors()
+                + ", name='"
+                +  ""
+                + super.getName()
+                + '\''
+                + '}';
     }
 }
