@@ -12,6 +12,8 @@ import checker.CheckerConstants;
 import fileio.CardInput;
 import fileio.DecksInput;
 import fileio.Input;
+import gameplay.Command;
+import gameplay.Gameplay;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +82,9 @@ public final class Main {
         ArrayList<ArrayList<Card>> decksPlayerTwo = PrepareGame.prepareDecks(inputData.getPlayerTwoDecks());
 
         ArrayList<GameActions> gameActions = PrepareGame.prepareActions(inputData.getGames());
-
+        Gameplay gameplay = new Gameplay(gameActions, output);
+        gameplay.chooseAction(decksPlayerOne, decksPlayerTwo);
+        output = gameplay.getOutput();
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
