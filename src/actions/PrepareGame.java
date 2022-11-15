@@ -2,6 +2,7 @@ package actions;
 
 import cards.*;
 import fileio.*;
+import gameplay.Player;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -118,8 +119,6 @@ public class PrepareGame {
             ggame.setActions(actions);
             games.add(ggame);
         }
-      //  System.out.println(games.get(0).getStartGame().getPlayerOneHero().toString());
-     //   System.out.println("\n");
         return games;
     }
 }
