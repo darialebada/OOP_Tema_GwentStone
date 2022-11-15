@@ -10,8 +10,8 @@ public class Miraj extends Card {
      * ability = "Skyjack", can swap his life for a minion enemy's life
      */
 
-    public Miraj(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public Miraj(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.row = 1;
         this.ability = "Skyjack";
         this.frozen = false;

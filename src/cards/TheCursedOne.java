@@ -10,8 +10,8 @@ public class TheCursedOne extends Card {
      * ability = "Shapeshift", can swap for an enemy minion life with attack
      */
 
-    public TheCursedOne(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public TheCursedOne(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.setAttackDamage(0);
         this.row = 1;
         this.ability = "Shapeshift";

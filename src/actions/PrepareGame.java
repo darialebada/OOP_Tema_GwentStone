@@ -30,63 +30,63 @@ public class PrepareGame {
     public static Card prepareCard (CardInput readCard) {
         Card card;
         if (readCard.getName().equals("Sentinel")) {
-            card = new Sentinel(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+            card = new Sentinel(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                 readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Berserker")) {
-                card = new Berserker(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Berserker(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                      readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Goliath")) {
-                card = new Goliath(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Goliath(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                    readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Warden")) {
-                card = new Warden(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Warden(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                   readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("The Ripper")) {
-                card = new TheRipper(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new TheRipper(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                      readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Miraj")) {
-                card = new Miraj(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Miraj(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                  readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("The Cursed One")) {
-                card = new TheCursedOne(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new TheCursedOne(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                         readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Disciple")) {
-                card = new Disciple(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Disciple(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                     readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Firestorm")) {
-                card = new Firestorm(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Firestorm(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                      readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Winterfell")) {
-                card = new Winterfell(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new Winterfell(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                       readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Heart Hound")) {
-                card = new HeartHound(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new HeartHound(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                       readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Lord Royce")) {
-                card = new LordRoyce(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new LordRoyce(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                      readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("Empress Thorina")) {
-                card = new EmpressThorina(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new EmpressThorina(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                           readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("King Mudface")) {
-                card = new KingMudFace(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new KingMudFace(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                        readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else
             if (readCard.getName().equals("General Kocioraw")) {
-                card = new GeneralKocioraw(readCard.getMana(), readCard.getHealth(), readCard.getAttackDamage(),
+                card = new GeneralKocioraw(readCard.getMana(), readCard.getAttackDamage(), readCard.getHealth(),
                                            readCard.getDescription(), readCard.getColors(), readCard.getName());
         } else return null;
 

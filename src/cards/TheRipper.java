@@ -10,8 +10,8 @@ public class TheRipper extends Card {
      * ability = "Weak Knees", -2 attack for a minion enemy, can be used only on a card
      */
 
-    public TheRipper(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public TheRipper(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.row = 1;
         this.ability = "Weak Knees";
         this.frozen = false;

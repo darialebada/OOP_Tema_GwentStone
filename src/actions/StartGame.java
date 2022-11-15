@@ -66,22 +66,4 @@ public class StartGame {
     public void setStartingPlayer(int startingPlayer) {
         this.startingPlayer = startingPlayer;
     }
-
-    @Override
-    public String toString() {
-        return "StartGameInput{"
-                + "playerOneDeckIdx="
-                + playerOneDeckIdx
-                + ", playerTwoDeckIdx="
-                + playerTwoDeckIdx
-                + ", shuffleSeed="
-                + shuffleSeed
-                +  ", playerOneHero="
-                + playerOneHero
-                + ", playerTwoHero="
-                + playerTwoHero
-                + ", startingPlayer="
-                + startingPlayer
-                + '}';
-    }
 }

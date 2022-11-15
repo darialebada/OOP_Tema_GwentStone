@@ -7,7 +7,7 @@ public class LordRoyce extends Card {
     /**
      * ability = frozes the card with maximum health from row
      */
-    public LordRoyce(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public LordRoyce(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "Sub-Zero";
     }

@@ -7,7 +7,7 @@ public class GeneralKocioraw extends Card {
     /**
      * ability = +1 attack for all card from row
      */
-    public GeneralKocioraw(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public GeneralKocioraw(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "Blood Thirst";
     }

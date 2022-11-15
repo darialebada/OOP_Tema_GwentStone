@@ -7,7 +7,7 @@ public class HeartHound extends Card {
     /**
      * ability = steal the minion with most health and place it opposite
      */
-    public HeartHound(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public HeartHound(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "steal";
     }

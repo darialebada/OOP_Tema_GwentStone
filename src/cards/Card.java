@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Card {
     private int mana;
-    private int health;
     private int attackDamage;
+    private int health;
     private String description;
     private ArrayList<String> colors;
     private String name;
@@ -22,7 +22,7 @@ public class Card {
         this.colors = card.colors;
         this.name = card.name;
     }
-    public Card(int mana, int health, int attackDamage, String description, ArrayList<String> colors, String name) {
+    public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
         this.mana = mana;
         this.health = health;
         this.attackDamage = attackDamage;

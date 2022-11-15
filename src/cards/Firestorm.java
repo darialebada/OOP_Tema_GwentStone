@@ -7,7 +7,7 @@ public class Firestorm extends Card {
     /**
      * ability = -1 life for all minions on the targeted row
      */
-    public Firestorm(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public Firestorm(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "-1 life";
     }

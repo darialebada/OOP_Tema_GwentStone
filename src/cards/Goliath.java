@@ -10,8 +10,8 @@ public class Goliath extends Card {
      * ability = "Tank", pasive ability, this card must be attacked first
      */
 
-    public Goliath(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public Goliath(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.row = 1;
         this.ability = "Tank";
         this.frozen = false;

@@ -7,7 +7,7 @@ public class KingMudFace extends Card {
     /**
      * ability = +1 life for all cards from row
      */
-    public KingMudFace(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public KingMudFace(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "Earth Born";
     }

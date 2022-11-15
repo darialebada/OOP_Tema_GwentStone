@@ -6,8 +6,8 @@ public class Sentinel extends Card {
     private int row;
     private boolean frozen;
 
-    public Sentinel(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public Sentinel(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.row = 2;
         this.frozen = false;
     }

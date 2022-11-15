@@ -7,7 +7,7 @@ public class Winterfell extends Card {
     /**
      * ability = all cards on targeted row frozen for a tour
      */
-    public Winterfell(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
+    public Winterfell(int mana,  int attackDamange, int health, String description, ArrayList<String> colors, String name) {
         super(mana, 0, 0, description, colors, name);
         this.ability = "stay";
     }

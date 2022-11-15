@@ -6,8 +6,8 @@ public class Berserker extends Card {
     private int row;
     private boolean frozen ;
 
-    public Berserker(int mana, int health, int attackDamange, String description, ArrayList<String> colors, String name) {
-        super(mana, health, attackDamange, description, colors, name);
+    public Berserker(int mana, int attackDamange, int health, String description, ArrayList<String> colors, String name) {
+        super(mana, attackDamange, health, description, colors, name);
         this.row = 2;
         this.frozen = false;
     }
