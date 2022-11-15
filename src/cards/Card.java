@@ -81,7 +81,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "CardInput{"
+        return  "{"
                 +  "mana="
                 + mana
                 +  ", attackDamage="

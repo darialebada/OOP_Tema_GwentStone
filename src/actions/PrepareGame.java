@@ -3,6 +3,7 @@ package actions;
 import cards.*;
 import fileio.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PrepareGame {
@@ -18,7 +19,7 @@ public class PrepareGame {
             ArrayList<Card> newDeck = new ArrayList<Card>();
             ArrayList<CardInput> readDeck = decksInput.getDecks().get(i);
             for (int j = 0; j < decksInput.getNrCardsInDeck(); j++) {
-                Card card = new Card(prepareCard(readDeck.get(i)));
+                Card card = new Card(prepareCard(readDeck.get(j)));
                 newDeck.add(card);
             }
             decksPlayer.add(newDeck);
