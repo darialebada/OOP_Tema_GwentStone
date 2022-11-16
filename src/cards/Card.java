@@ -1,9 +1,9 @@
 package cards;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
+@JsonIgnoreProperties({ "type" })
 public class Card {
     private int mana;
     private int attackDamage;
@@ -11,12 +11,11 @@ public class Card {
     private String description;
     private ArrayList<String> colors;
     private String name;
+    private String type;
 
-    public Card() {
+    public Card() { }
 
-    }
-
-    public Card(Card card) {
+    public Card(final Card card) {
         this.mana = card.mana;
         this.health = card.health;
         this.attackDamage = card.attackDamage;
@@ -24,7 +23,8 @@ public class Card {
         this.colors = new ArrayList<String>(card.colors);
         this.name = card.name;
     }
-    public Card(int mana, int attackDamage, int health, String description, ArrayList<String> colors, String name) {
+    public Card(final int mana, final int attackDamage, final int health,
+                final String description, final ArrayList<String> colors, final String name) {
         this.mana = mana;
         this.health = health;
         this.attackDamage = attackDamage;
@@ -33,7 +33,8 @@ public class Card {
         this.name = name;
     }
 
-    public Card(int mana, String description, ArrayList<String> colors, String name) {
+    public Card(final int mana, final String description,
+                final ArrayList<String> colors, final String name) {
         this.mana = mana;
         this.description = description;
         this.colors = colors;
@@ -44,7 +45,7 @@ public class Card {
         return mana;
     }
 
-    public void setMana(int mana) {
+    public void setMana(final int mana) {
         this.mana = mana;
     }
 
@@ -52,7 +53,7 @@ public class Card {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(final int health) {
         this.health = health;
     }
 
@@ -60,7 +61,7 @@ public class Card {
         return attackDamage;
     }
 
-    public void setAttackDamage(int attackDamage) {
+    public void setAttackDamage(final int attackDamage) {
         this.attackDamage = attackDamage;
     }
 
@@ -68,7 +69,7 @@ public class Card {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -76,7 +77,7 @@ public class Card {
         return colors;
     }
 
-    public void setColors(ArrayList<String> colors) {
+    public void setColors(final ArrayList<String> colors) {
         this.colors = colors;
     }
 
@@ -84,7 +85,14 @@ public class Card {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+    public void setType(final String type) {
+        this.type = type;
     }
 }

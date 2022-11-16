@@ -1,7 +1,6 @@
 package actions;
 
 import cards.Card;
-
 public class StartGame {
     private int playerOneDeckIdx;
     private int playerTwoDeckIdx;
@@ -10,7 +9,8 @@ public class StartGame {
     private Card playerTwoHero;
     private int startingPlayer;
 
-    public StartGame(int playerOneDeckIdx, int playerTwoDeckIdx, int shuffleSeed, Card playerOneHero, Card playerTwoHero, int startingPlayer) {
+    public StartGame(final int playerOneDeckIdx, final int playerTwoDeckIdx, final int shuffleSeed,
+                     final Card playerOneHero, final Card playerTwoHero, final int startingPlayer) {
         this.playerOneDeckIdx = playerOneDeckIdx;
         this.playerTwoDeckIdx = playerTwoDeckIdx;
         this.shuffleSeed = shuffleSeed;
@@ -19,51 +19,97 @@ public class StartGame {
         this.startingPlayer = startingPlayer;
     }
 
+    /**
+     *
+     * @return index for player one's deck
+     */
     public int getPlayerOneDeckIdx() {
         return playerOneDeckIdx;
     }
 
-    public void setPlayerOneDeckIdx(int playerOneDeckIdx) {
+    /**
+     * set index for player one's deck
+     */
+    public void setPlayerOneDeckIdx(final int playerOneDeckIdx) {
         this.playerOneDeckIdx = playerOneDeckIdx;
     }
 
+    /**
+     *
+     * @return index for player two's deck
+     */
     public int getPlayerTwoDeckIdx() {
         return playerTwoDeckIdx;
     }
 
-    public void setPlayerTwoDeckIdx(int playerTwoDeckIdx) {
+    /**
+     * set index for player two's deck
+     */
+    public void setPlayerTwoDeckIdx(final int playerTwoDeckIdx) {
         this.playerTwoDeckIdx = playerTwoDeckIdx;
     }
 
+    /**
+     *
+     * @return seed for shuffle (to randomize cards)
+     */
     public int getShuffleSeed() {
         return shuffleSeed;
     }
 
-    public void setShuffleSeed(int shuffleSeed) {
+    /**
+     *
+     * @param shuffleSeed
+     */
+    public void setShuffleSeed(final int shuffleSeed) {
         this.shuffleSeed = shuffleSeed;
     }
 
+    /**
+     *
+     * @return hero card for player one
+     */
     public Card getPlayerOneHero() {
         return playerOneHero;
     }
 
-    public void setPlayerOneHero(Card playerOneHero) {
+    /**
+     *
+     * @param playerOneHero
+     */
+    public void setPlayerOneHero(final Card playerOneHero) {
         this.playerOneHero = playerOneHero;
     }
 
+    /**
+     *
+     * @return hero card for player two
+     */
     public Card getPlayerTwoHero() {
         return playerTwoHero;
     }
 
-    public void setPlayerTwoHero(Card playerTwoHero) {
+    /**
+     *
+     * @param playerTwoHero
+     */
+    public void setPlayerTwoHero(final Card playerTwoHero) {
         this.playerTwoHero = playerTwoHero;
     }
 
+    /**
+     *
+     * @return index of the player who starts the game
+     */
     public int getStartingPlayer() {
         return startingPlayer;
     }
 
-    public void setStartingPlayer(int startingPlayer) {
+    /**
+     *
+     * @param startingPlayer
+     */
+    public void setStartingPlayer(final int startingPlayer) {
         this.startingPlayer = startingPlayer;
     }
 }

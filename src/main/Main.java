@@ -3,19 +3,14 @@ package main;
 import actions.GameActions;
 import actions.PrepareGame;
 import cards.Card;
-import cards.Winterfell;
 import checker.Checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
-import fileio.CardInput;
-import fileio.DecksInput;
 import fileio.Input;
-import gameplay.Command;
 import gameplay.Gameplay;
-import gameplay.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,8 +75,10 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         //TODO add here the entry point to your implementation
-        ArrayList<ArrayList<Card>> decksPlayerOne = PrepareGame.prepareDecks(inputData.getPlayerOneDecks());
-        ArrayList<ArrayList<Card>> decksPlayerTwo = PrepareGame.prepareDecks(inputData.getPlayerTwoDecks());
+        ArrayList<ArrayList<Card>> decksPlayerOne
+                = PrepareGame.prepareDecks(inputData.getPlayerOneDecks());
+        ArrayList<ArrayList<Card>> decksPlayerTwo
+                = PrepareGame.prepareDecks(inputData.getPlayerTwoDecks());
 
         ArrayList<GameActions> gameActions = PrepareGame.prepareActions(inputData.getGames());
 

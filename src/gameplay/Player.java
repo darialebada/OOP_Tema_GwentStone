@@ -5,43 +5,33 @@ import cards.Card;
 import java.util.ArrayList;
 
 public class Player {
-    private ArrayList<Card> cardsFirstRow;
-    private ArrayList<Card> cardsSecondRow;
+    private ArrayList<ArrayList<Card>> cardsInRow;
     private ArrayList<Card> deck;
     private ArrayList<Card> cardsInHand;
     private Card hero;
     private int handIdx;
 
-    public Player(ArrayList<Card> deck, Card hero) {
-        this.cardsFirstRow = new ArrayList<>();
-        this.cardsSecondRow = new ArrayList<>();
+    public Player(final ArrayList<Card> deck, final Card hero) {
+        this.cardsInRow = new ArrayList<ArrayList<Card>>(2);
         this.deck = new ArrayList<Card>(deck);
         this.cardsInHand = new ArrayList<Card>();
         this.hero = hero;
         this.handIdx = 0;
     }
 
-    public ArrayList<Card> getCardsFirstRow() {
-        return cardsFirstRow;
+    public ArrayList<ArrayList<Card>> getCardsInRow() {
+        return cardsInRow;
     }
 
-    public void setCardsFirstRow(ArrayList<Card> cardsFirstRow) {
-        this.cardsFirstRow = cardsFirstRow;
-    }
-
-    public ArrayList<Card> getCardsSecondRow() {
-        return cardsSecondRow;
-    }
-
-    public void setCardsSecondRow(ArrayList<Card> cardsSecondRow) {
-        this.cardsSecondRow = cardsSecondRow;
+    public void setCardsInRow(final ArrayList<ArrayList<Card>> cardsInRow) {
+        this.cardsInRow = cardsInRow;
     }
 
     public ArrayList<Card> getDeck() {
         return deck;
     }
 
-    public void setDeck(ArrayList<Card> deck) {
+    public void setDeck(final ArrayList<Card> deck) {
         this.deck = deck;
     }
 
@@ -49,7 +39,7 @@ public class Player {
         return cardsInHand;
     }
 
-    public void setCardsInHand(ArrayList<Card> cardsHand) {
+    public void setCardsInHand(final ArrayList<Card> cardsHand) {
         this.cardsInHand = cardsHand;
     }
 
@@ -57,7 +47,7 @@ public class Player {
         return hero;
     }
 
-    public void setHero(Card hero) {
+    public void setHero(final Card hero) {
         this.hero = hero;
     }
 
@@ -65,7 +55,7 @@ public class Player {
         return handIdx;
     }
 
-    public void setHandIdx(int handIdx) {
+    public void setHandIdx(final int handIdx) {
         this.handIdx = handIdx;
     }
 }

@@ -6,15 +6,13 @@ public class GameActions {
     private StartGame startGame;
     private ArrayList<Action> actions;
 
-    public GameActions(){
-
-    }
+    public GameActions() { }
 
     public StartGame getStartGame() {
         return startGame;
     }
 
-    public void setStartGame(StartGame startGame) {
+    public void setStartGame(final StartGame startGame) {
         this.startGame = startGame;
     }
 
@@ -22,7 +20,7 @@ public class GameActions {
         return actions;
     }
 
-    public void setActions(ArrayList<Action> actions) {
+    public void setActions(final ArrayList<Action> actions) {
         this.actions = actions;
     }
 }
