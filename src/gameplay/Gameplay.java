@@ -5,6 +5,8 @@ import actions.GameActions;
 import actions.StartGame;
 import cards.Card;
 
+import cards.MinionCard;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,11 +16,11 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Gameplay {
+    private int endTurn;
     private int turn;
     private int currentPlayer;
     private ArrayList<GameActions> gameActions;
-    private Player playerOne;
-    private Player playerTwo;
+    private ArrayList<Player> player;
     private ArrayNode output;
 
     public Gameplay(final ArrayList<GameActions> gameActions,
@@ -40,28 +42,39 @@ public class Gameplay {
             StartGame startGame = gameActions.get(i).getStartGame();
 
             //get each player
-            playerOne = new Player(decksPlayerOne.get(startGame.getPlayerOneDeckIdx()),
-                                          startGame.getPlayerOneHero());
-            playerTwo = new Player(decksPlayerTwo.get(startGame.getPlayerTwoDeckIdx()),
-                                          startGame.getPlayerTwoHero());
+            player = new ArrayList<Player>(2);
+
+            player.add(new Player(decksPlayerOne.get(startGame.getPlayerOneDeckIdx()),
+                       startGame.getPlayerOneHero()));
+
+            player.add(new Player(decksPlayerTwo.get(startGame.getPlayerTwoDeckIdx()),
+                       startGame.getPlayerTwoHero()));
 
             startGameAction(startGame);
+            endTurn = 0;
+            turn = 1;
+
             currentPlayer = startGame.getStartingPlayer();
+
             ArrayList<Action> actions = gameActions.get(i).getActions();
             for (int j = 0; j < actions.size(); j++) {
                 if (actions.get(j).getCommand().equals("getPlayerDeck")) {
-                    getPlayerDeck(actions.get(j).getPlayerIdx());
+                   getPlayerDeck(actions.get(j).getPlayerIdx());
                 } else if (actions.get(j).getCommand().equals("getPlayerHero")) {
-                    getPlayerHero(actions.get(j).getPlayerIdx());
+                   getPlayerHero(actions.get(j).getPlayerIdx());
                 } else if (actions.get(j).getCommand().equals("getPlayerTurn")) {
-                    getPlayerTurn(currentPlayer);
+                   getPlayerTurn(currentPlayer);
                 } else if (actions.get(j).getCommand().equals("endPlayerTurn")) {
-                    endPlayerTurn();
+                    endPlayerTurn(currentPlayer);
                 } else if (actions.get(j).getCommand().equals("placeCard")) {
-                   // placeCard(actions.get(j).getHandIdx());
-                }
+                    placeCard(actions.get(j).getHandIdx());
+                } else if (actions.get(j).getCommand().equals("getCardsInHand")) {
+                    getCardsInHand(actions.get(j).getPlayerIdx());
+                } else if (actions.get(j).getCommand().equals("getPlayerMana")) {
+                     getPlayerMana(actions.get(j).getPlayerIdx());
+                } else if (actions.get(j).getCommand().equals("getCardsOnTable"))
+                    getCardOnTable();
             }
-
         }
     }
 
@@ -70,15 +83,16 @@ public class Gameplay {
      * @param startGame
      */
     public void startGameAction(final StartGame startGame) {
-        Collections.shuffle(playerOne.getDeck(), new Random(startGame.getShuffleSeed()));
-        Collections.shuffle(playerTwo.getDeck(), new Random(startGame.getShuffleSeed()));
+        Collections.shuffle(player.get(0).getDeck(), new Random(startGame.getShuffleSeed()));
+        Collections.shuffle(player.get(1).getDeck(), new Random(startGame.getShuffleSeed()));
 
         // add in row
-        playerOne.getCardsInHand().add(playerOne.getDeck().get(0));
-        playerOne.getDeck().remove(0);
+        player.get(0).getCardsInHand().add(player.get(0).getDeck().get(0));
+        player.get(0).getDeck().remove(0);
 
-        playerTwo.getCardsInHand().add(playerTwo.getDeck().get(0));
-        playerTwo.getDeck().remove(0);
+
+        player.get(1).getCardsInHand().add(player.get(1).getDeck().get(0));
+        player.get(1).getDeck().remove(0);
     }
 
     /**
@@ -90,11 +104,7 @@ public class Gameplay {
         ObjectNode node = objectMapper.createObjectNode();
         node.put("command", "getPlayerDeck");
         node.put("playerIdx", playerIdx);
-        if (playerIdx == 1) {
-            node.putPOJO("output", playerOne.getDeck());
-        } else {
-            node.putPOJO("output", playerTwo.getDeck());
-        }
+        node.set("output", objectMapper.convertValue(player.get(playerIdx-1).getDeck(), JsonNode.class));
         output.add(node);
     }
 
@@ -107,11 +117,7 @@ public class Gameplay {
         ObjectNode node = objectMapper.createObjectNode();
         node.put("command", "getPlayerHero");
         node.put("playerIdx", playerIdx);
-        if (playerIdx == 1) {
-            node.putPOJO("output", playerOne.getHero());
-        } else {
-            node.putPOJO("output", playerTwo.getHero());
-        }
+        node.set("output", objectMapper.convertValue(player.get(playerIdx-1).getHero(), JsonNode.class));
         output.add(node);
     }
 
@@ -130,49 +136,93 @@ public class Gameplay {
     /**
      *
      */
-    public void endPlayerTurn() {
+    public void endPlayerTurn(int index) {
+        endTurn++;
+        if (endTurn % 2 == 1) {
+            if (turn < 10) {
+                turn++;
+            }
+            for (int k = 0; k <= 1; k++) {
+                if (player.get(k).getDeck().size() > 0) {
+                    player.get(k).getCardsInHand().add(player.get(k).getDeck().get(0));
+                    player.get(k).getDeck().remove(0);
+                }
+
+            }
+        }
         if (currentPlayer == 1) {
             currentPlayer = 2;
+                player.get(0).setMana(player.get(0).getMana() + turn);
         } else {
             currentPlayer = 1;
-        }
-        turn++;
-    }
-/*
-    public void placeCard(int handIndx) {
-        if (currentPlayer == 1) {
-            //if (playerOne.getCardsInHand().get(handIndx)) {
-                //addCardInRow()
-            //}
+                player.get(1).setMana(player.get(1).getMana() + turn);
         }
     }
 
-    public void addCardInRow(Player player, int index) {
-        if (player.getCardsInHand().get(index).getType().equals("Environment")) {
+    public void placeCard(int index) {
+        if (player.get(currentPlayer - 1).getCardsInHand().get(index).getType().equals("Environment")) {
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode node = objectMapper.createObjectNode();
             node.put("command", "placeCard");
             node.put("handIdx", index);
             node.put("error", "Cannot place environment card on table.");
             output.add(node);
-            return;
-        } else if (player.getHandIdx() < player.getCardsInHand().get(0).getMana()) {
+        } else if (player.get(currentPlayer - 1).getMana() < player.get(currentPlayer - 1).getCardsInHand().get(index).getMana()) {
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode node = objectMapper.createObjectNode();
             node.put("command", "placeCard");
             node.put("handIdx", index);
             node.put("error", "Not enough mana to place card on table.");
             output.add(node);
-            return;
-        //} else if ()
+        } else if (player.get(currentPlayer - 1).getCardsInHand().get(index) instanceof MinionCard) {
+            int rowToAdd = ((MinionCard)player.get(currentPlayer - 1).getCardsInHand().get(index)).getRow() - 1;
+            if (player.get(currentPlayer - 1).getCardsInRow().get(rowToAdd).size() >= 5) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "placeCard");
+                node.put("handIdx", index);
+                node.put("error", "Cannot place card on table since row is full.");
+                output.add(node);
+            } else {
+                player.get(currentPlayer - 1).getCardsInRow().get(rowToAdd).add(player.get(currentPlayer - 1).getCardsInHand().get(index));
+                player.get(currentPlayer - 1).setMana(player.get(currentPlayer - 1).getMana() -
+                player.get(currentPlayer - 1).getCardsInHand().get(index).getMana());
+                player.get(currentPlayer - 1).getCardsInHand().remove(index);
+            }
         }
+    }
 
-        //(player.getCardsInHand().get(index) instanceof TheRipper) {
-        //((TheRipper) player.getCardsInHand().get(index)).getRow()
+    public void getPlayerMana(int index) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getPlayerMana");
+        node.put("playerIdx", index);
+        node.put("output", player.get(index - 1).getMana());
+        output.add(node);
+    }
 
-                //player.getCardsInHand().get(index).getName().equals("The Ripper") ||
-               // player.getCardsInHand().get(index).getName().)
-    }*/
+    public void getCardsInHand(int index) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getCardsInHand");
+        node.put("playerIdx", index);
+        node.set("output", objectMapper.convertValue(player.get(index-1).getCardsInHand(), JsonNode.class));
+        output.add(node);
+    }
+
+    public void getCardOnTable() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getCardsOnTable");
+        ArrayList<ArrayList<Card>> table = new ArrayList<>(4);
+        table.add(player.get(1).getCardsInRow().get(1));
+        table.add(player.get(1).getCardsInRow().get(0));
+        table.add(player.get(0).getCardsInRow().get(0));
+        table.add(player.get(0).getCardsInRow().get(1));
+
+        node.set("output", objectMapper.convertValue(table, JsonNode.class));
+        output.add(node);
+    }
 
     public ArrayList<GameActions> getGameActions() {
         return gameActions;
@@ -190,20 +240,12 @@ public class Gameplay {
         this.output = output;
     }
 
-    public Player getPlayerOne() {
-        return playerOne;
+    public ArrayList<Player> getPlayer() {
+        return player;
     }
 
-    public void setPlayerOne(final Player playerOne) {
-        this.playerOne = playerOne;
-    }
-
-    public Player getPlayerTwo() {
-        return playerTwo;
-    }
-
-    public void setPlayerTwo(final Player playerTwo) {
-        this.playerTwo = playerTwo;
+    public void setPlayer(final ArrayList<Player> player) {
+        this.player = player;
     }
 
     public int getCurrentPlayer() {
@@ -220,5 +262,13 @@ public class Gameplay {
 
     public void setTurn(final int turn) {
         this.turn = turn;
+    }
+
+    public int isEndTurn() {
+        return endTurn;
+    }
+
+    public void setEndTurn(final int endTurn) {
+        this.endTurn = endTurn;
     }
 }

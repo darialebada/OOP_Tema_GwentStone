@@ -9,14 +9,16 @@ public class Player {
     private ArrayList<Card> deck;
     private ArrayList<Card> cardsInHand;
     private Card hero;
-    private int handIdx;
+    private int mana;
 
     public Player(final ArrayList<Card> deck, final Card hero) {
         this.cardsInRow = new ArrayList<ArrayList<Card>>(2);
+        this.cardsInRow.add(new ArrayList<Card>());
+        this.cardsInRow.add(new ArrayList<Card>());
         this.deck = new ArrayList<Card>(deck);
         this.cardsInHand = new ArrayList<Card>();
         this.hero = hero;
-        this.handIdx = 0;
+        this.mana = 1;
     }
 
     public ArrayList<ArrayList<Card>> getCardsInRow() {
@@ -51,11 +53,11 @@ public class Player {
         this.hero = hero;
     }
 
-    public int getHandIdx() {
-        return handIdx;
+    public int getMana() {
+        return mana;
     }
 
-    public void setHandIdx(final int handIdx) {
-        this.handIdx = handIdx;
+    public void setMana(final int mana) {
+        this.mana = mana;
     }
 }

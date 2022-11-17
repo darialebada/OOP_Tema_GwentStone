@@ -24,7 +24,7 @@ public class MinionCard extends Card {
         return row;
     }
 
-    public void setRow(int row) {
+    public void setRow(final int row) {
         this.row = row;
     }
 
@@ -32,7 +32,7 @@ public class MinionCard extends Card {
         return frozen;
     }
 
-    public void setFrozen(boolean frozen) {
+    public void setFrozen(final boolean frozen) {
         this.frozen = frozen;
     }
 
@@ -40,7 +40,16 @@ public class MinionCard extends Card {
         return ability;
     }
 
-    public void setAbility(boolean ability) {
+    public void setAbility(final boolean ability) {
         this.ability = ability;
+    }
+
+    @Override
+    public String toString() {
+        return "MinionCard{" +
+                "row=" + row +
+                ", frozen=" + frozen +
+                ", ability=" + ability +
+                '}' + super.getName();
     }
 }

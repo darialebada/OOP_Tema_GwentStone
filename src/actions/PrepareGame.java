@@ -1,6 +1,9 @@
 package actions;
 
-import cards.*;
+import cards.Card;
+import cards.EnvironmentCard;
+import cards.HeroCard;
+import cards.MinionCard;
 import fileio.DecksInput;
 import fileio.CardInput;
 import fileio.GameInput;
@@ -39,33 +42,32 @@ public class PrepareGame {
      */
     public static Card prepareCard(final CardInput readCard) {
         Card card;
-        if (readCard.getName().equals("Sentinel") ||
-            readCard.getName().equals("Berserker") ||
-            readCard.getName().equals("The Cursed One") ||
-            readCard.getName().equals("Disciple")) {
+        if (readCard.getName().equals("Sentinel")
+            || readCard.getName().equals("Berserker")
+            || readCard.getName().equals("The Cursed One")
+            || readCard.getName().equals("Disciple")) {
 
             card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
                                 readCard.getHealth(), readCard.getDescription(),
                                 readCard.getColors(), readCard.getName(), 2);
 
-        } else if (readCard.getName().equals("The Ripper") ||
-                   readCard.getName().equals("Miraj") ||
-                   readCard.getName().equals("Goliath") ||
-                   readCard.getName().equals("Warden")) {
+        } else if (readCard.getName().equals("The Ripper")
+                   || readCard.getName().equals("Miraj")
+                   || readCard.getName().equals("Goliath")
+                   || readCard.getName().equals("Warden")) {
 
             card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
                     readCard.getHealth(), readCard.getDescription(),
                     readCard.getColors(), readCard.getName(), 1);
 
-        } else if (readCard.getName().equals("Firestorm") ||
-                   readCard.getName().equals("Winterfell") ||
-                   readCard.getName().equals("Heart Hound")) {
+        } else if (readCard.getName().equals("Firestorm")
+                   || readCard.getName().equals("Winterfell")
+                   || readCard.getName().equals("Heart Hound")) {
 
             card = new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
                     readCard.getHealth(), readCard.getDescription(),
                     readCard.getColors(), readCard.getName());
-        }
-        else {
+        } else {
             card = new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
                     readCard.getHealth(), readCard.getDescription(),
                     readCard.getColors(), readCard.getName());
