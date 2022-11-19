@@ -19,96 +19,50 @@ public class StartGame {
         this.startingPlayer = startingPlayer;
     }
 
-    /**
-     *
-     * @return index for player one's deck
-     */
     public int getPlayerOneDeckIdx() {
         return playerOneDeckIdx;
     }
 
-    /**
-     * set index for player one's deck
-     */
     public void setPlayerOneDeckIdx(final int playerOneDeckIdx) {
         this.playerOneDeckIdx = playerOneDeckIdx;
     }
 
-    /**
-     *
-     * @return index for player two's deck
-     */
     public int getPlayerTwoDeckIdx() {
         return playerTwoDeckIdx;
     }
 
-    /**
-     * set index for player two's deck
-     */
     public void setPlayerTwoDeckIdx(final int playerTwoDeckIdx) {
         this.playerTwoDeckIdx = playerTwoDeckIdx;
     }
 
-    /**
-     *
-     * @return seed for shuffle (to randomize cards)
-     */
     public int getShuffleSeed() {
         return shuffleSeed;
     }
 
-    /**
-     *
-     * @param shuffleSeed
-     */
     public void setShuffleSeed(final int shuffleSeed) {
         this.shuffleSeed = shuffleSeed;
     }
 
-    /**
-     *
-     * @return hero card for player one
-     */
     public Card getPlayerOneHero() {
         return playerOneHero;
     }
 
-    /**
-     *
-     * @param playerOneHero
-     */
     public void setPlayerOneHero(final Card playerOneHero) {
         this.playerOneHero = playerOneHero;
     }
 
-    /**
-     *
-     * @return hero card for player two
-     */
     public Card getPlayerTwoHero() {
         return playerTwoHero;
     }
 
-    /**
-     *
-     * @param playerTwoHero
-     */
     public void setPlayerTwoHero(final Card playerTwoHero) {
         this.playerTwoHero = playerTwoHero;
     }
 
-    /**
-     *
-     * @return index of the player who starts the game
-     */
     public int getStartingPlayer() {
         return startingPlayer;
     }
 
-    /**
-     *
-     * @param startingPlayer
-     */
     public void setStartingPlayer(final int startingPlayer) {
         this.startingPlayer = startingPlayer;
     }

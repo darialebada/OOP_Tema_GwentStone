@@ -6,11 +6,13 @@ import actions.StartGame;
 import cards.Card;
 
 import cards.EnvironmentCard;
+import cards.HeroCard;
 import cards.MinionCard;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fileio.Coordinates;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,13 +25,18 @@ public class Gameplay {
     private ArrayList<GameActions> gameActions;
     private ArrayList<Player> player;
     private ArrayNode output;
-    private int frozenPlayer;
-    private int frozenRow;
+    private int winsPlayerOne;
+    private int winsPlayerTwo;
+    private int gamesNumber;
+
 
     public Gameplay(final ArrayList<GameActions> gameActions,
                     final ArrayNode output) {
         this.gameActions = gameActions;
         this.output = output;
+        this.winsPlayerOne = 0;
+        this.winsPlayerTwo = 0;
+        this.gamesNumber = 0;
     }
 
     /**
@@ -85,6 +92,22 @@ public class Gameplay {
                     getCardAtPosition(actions.get(j).getX(), actions.get(j).getY());
                 } else if (actions.get(j).getCommand().equals("getFrozenCardsOnTable")) {
                     getFrozenCardsOnTable();
+                } else if (actions.get(j).getCommand().equals("cardUsesAttack")) {
+                    cardUsesAttack(actions.get(j).getCardAttacker().getX(), actions.get(j).getCardAttacker().getY(),
+                                   actions.get(j).getCardAttacked().getX(), actions.get(j).getCardAttacked().getY());
+                } else if (actions.get(j).getCommand().equals("cardUsesAbility")) {
+                    cardUsesAbility(actions.get(j).getCardAttacker().getX(), actions.get(j).getCardAttacker().getY(),
+                                    actions.get(j).getCardAttacked().getX(), actions.get(j).getCardAttacked().getY());
+                } else if (actions.get(j).getCommand().equals("useAttackHero")) {
+                    useAttackHero(actions.get(j).getCardAttacker().getX(), actions.get(j).getCardAttacker().getY());
+                } else if (actions.get(j).getCommand().equals("useHeroAbility")) {
+                    useHeroAbility(actions.get(j).getAffectedRow());
+                } else if (actions.get(j).getCommand().equals("getTotalGamesPlayed")) {
+                    getTotalGamesPlayed();
+                } else if (actions.get(j).getCommand().equals("getPlayerOneWins")) {
+                    getPlayerOneWins();
+                } else if (actions.get(j).getCommand().equals("getPlayerTwoWins")) {
+                    getPlayerTwoWins();
                 }
             }
         }
@@ -154,9 +177,6 @@ public class Gameplay {
             if (turn < 10) {
                 turn++;
             }
-            if (frozenPlayer != 0) {
-                unfrozeCards();
-            }
             for (int k = 0; k <= 1; k++) {
                 if (player.get(k).getDeck().size() > 0) {
                     player.get(k).getCardsInHand().add(player.get(k).getDeck().get(0));
@@ -168,19 +188,53 @@ public class Gameplay {
         }
         if (currentPlayer == 1) {
             currentPlayer = 2;
-            //player.get(0).setMana(player.get(0).getMana() + turn);
+            if (player.get(0).getHero() instanceof HeroCard) {
+                ((HeroCard) player.get(0).getHero()).setAbility(false);
+            }
+            nonAttackCards(1);
+            unfrozeCards(1);
         } else {
             currentPlayer = 1;
-            //player.get(1).setMana(player.get(1).getMana() + turn);
+            if (player.get(1).getHero() instanceof HeroCard) {
+                ((HeroCard) player.get(1).getHero()).setAbility(false);
+            }
+            nonAttackCards(2);
+            unfrozeCards(2);
         }
     }
 
-    public void unfrozeCards() {
-        for (int i = 0; i < player.get(frozenPlayer - 1).getCardsInRow().get(frozenRow).size(); i++) {
-            int health = player.get(frozenPlayer - 1).getCardsInRow().get(frozenRow).get(i).getHealth() - 1;
-            player.get(frozenPlayer - 1).getCardsInRow().get(frozenRow).get(i).setHealth(health);
+    public void nonAttackCards(final int attackerIdx) {
+        for (int i = 0; i < player.get(attackerIdx - 1).getCardsInRow().get(0).size(); i++) {
+            if(player.get(attackerIdx - 1).getCardsInRow().get(0).get(i) instanceof MinionCard) {
+                if (((MinionCard) player.get(attackerIdx - 1).getCardsInRow().get(0).get(i)).isAttack()) {
+                    ((MinionCard) player.get(attackerIdx - 1).getCardsInRow().get(0).get(i)).setAttack(false);
+                }
+            }
         }
-        frozenPlayer = 0;
+        for (int i = 0; i < player.get(attackerIdx - 1).getCardsInRow().get(1).size(); i++) {
+            if(player.get(attackerIdx - 1).getCardsInRow().get(1).get(i) instanceof MinionCard) {
+                if ( ((MinionCard) player.get(attackerIdx - 1).getCardsInRow().get(1).get(i)).isAttack()) {
+                    ((MinionCard) player.get(attackerIdx - 1).getCardsInRow().get(1).get(i)).setAttack(false);
+                }
+            }
+        }
+    }
+
+    public void unfrozeCards(int playerIdx) {
+        for (int i = 0; i < player.get(playerIdx - 1).getCardsInRow().get(0).size(); i++) {
+            if (player.get(playerIdx - 1).getCardsInRow().get(0).get(i) instanceof MinionCard) {
+                if (((MinionCard) player.get(playerIdx - 1).getCardsInRow().get(0).get(i)).isFrozen()) {
+                    ((MinionCard) player.get(playerIdx - 1).getCardsInRow().get(0).get(i)).setFrozen(false);
+                }
+            }
+        }
+        for (int i = 0; i < player.get(playerIdx - 1).getCardsInRow().get(1).size(); i++) {
+            if (player.get(playerIdx - 1).getCardsInRow().get(1).get(i) instanceof MinionCard) {
+                if (((MinionCard) player.get(playerIdx - 1).getCardsInRow().get(1).get(i)).isFrozen()) {
+                    ((MinionCard) player.get(playerIdx - 1).getCardsInRow().get(1).get(i)).setFrozen(false);
+                }
+            }
+        }
     }
 
     public void placeCard(int index) {
@@ -370,12 +424,9 @@ public class Gameplay {
                 i--;
             }
         }
-        //frozenPlayer = affectedPlayer;
-        //frozenRow = row;
     }
 
     public void useWinterfellCard(final int affectedPlayer, final int row) {
-        frozenPlayer = affectedPlayer;
         for (int i = 0; i < player.get(affectedPlayer - 1).getCardsInRow().get(row).size(); i++) {
             if (player.get(affectedPlayer - 1).getCardsInRow().get(row).get(i) instanceof MinionCard) {
                 ((MinionCard) player.get(affectedPlayer - 1).getCardsInRow().get(row).get(i)).setFrozen(true);
@@ -410,7 +461,7 @@ public class Gameplay {
         if (player.get(playerIdx - 1).getCardsInRow().get(row).size() <= y) {
             node.put("output", "No card available at that position.");
         } else {
-            node.put("output",
+            node.set("output",
             objectMapper.convertValue(player.get(playerIdx - 1).getCardsInRow().get(row).get(y), JsonNode.class));
         }
         output.add(node);
@@ -456,9 +507,442 @@ public class Gameplay {
                 }
             }
         }
-
         node.set("output", objectMapper.convertValue(frozenTable, JsonNode.class));
         output.add(node);
+    }
+
+    public void cardUsesAttack(final int x_attacker, final int y_attacker,
+                               final int x_attacked, final int y_attacked) {
+        Coordinates coord1 = new Coordinates();
+        coord1.setX(x_attacked);
+        coord1.setY(y_attacked);
+        Coordinates coord2 = new Coordinates();
+        coord2.setX(x_attacker);
+        coord2.setY(y_attacker);
+        if ((currentPlayer == 2 && (x_attacked == 0 || x_attacked == 1))
+            || (currentPlayer == 1 && (x_attacked == 2 || x_attacked == 3)) ) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("command", "cardUsesAttack");
+            node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+            node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+            node.put("error", "Attacked card does not belong to the enemy.");
+            output.add(node);
+        } else {
+            int playerAttacker = currentPlayer;
+            int playerAttacked = getPlayerAttackedIdx();
+            int rowAttacked = getAttackedRow(x_attacked, playerAttacked);
+            int rowAttacker = getAttackerRow(x_attacker);
+
+            if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker) instanceof MinionCard) {
+                if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).isAttack()) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    ObjectNode node = objectMapper.createObjectNode();
+                    node.put("command", "cardUsesAttack");
+                    node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                    node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                    node.put("error", "Attacker card has already attacked this turn.");
+                    output.add(node);
+                } else if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).isFrozen()) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    ObjectNode node = objectMapper.createObjectNode();
+                    node.put("command", "cardUsesAttack");
+                    node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                    node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                    node.put("error", "Attacker card is frozen.");
+                    output.add(node);
+                } else {
+                    if (player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getName().equals("Goliath")
+                        || player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getName().equals("Warden")) {
+                        // attack
+                        attackCard(playerAttacker, playerAttacked, rowAttacker, rowAttacked, y_attacker, y_attacked);
+                    } else {
+                        if (checkIfOtherTank(playerAttacked)) {
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            ObjectNode node = objectMapper.createObjectNode();
+                            node.put("command", "cardUsesAttack");
+                            node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                            node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                            node.put("error", "Attacked card is not of type 'Tank'.");
+                            output.add(node);
+                        } else {
+                            //attack
+                            attackCard(playerAttacker, playerAttacked, rowAttacker, rowAttacked, y_attacker, y_attacked);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void attackCard(final int playerAttacker, final int playerAttacked,
+                           final int rowAttacker, final int rowAttacked,
+                           final int y_attacker, final int y_attacked) {
+        int health = player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getHealth()
+                - player.get(playerAttacker - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getAttackDamage();
+        if (health <= 0) {
+            player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).remove(y_attacked);
+        } else {
+            player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).setHealth(health);
+        }
+        if (player.get(playerAttacker - 1).getCardsInRow().get(rowAttacker).get(y_attacker) instanceof MinionCard) {
+            ((MinionCard) player.get(playerAttacker - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).setAttack(true);
+        }
+    }
+
+    public boolean checkIfOtherTank(final int playerAttacked) {
+        for (int i = 0; i < player.get(playerAttacked - 1).getCardsInRow().get(0).size(); i++) {
+            if (player.get(playerAttacked - 1).getCardsInRow().get(0).get(i).getName().equals("Goliath")
+                || (player.get(playerAttacked - 1).getCardsInRow().get(0).get(i).getName().equals("Warden"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void cardUsesAbility(final int x_attacker, final int y_attacker,
+                                final int x_attacked, final int y_attacked) {
+        Coordinates coord1 = new Coordinates();
+        coord1.setX(x_attacked);
+        coord1.setY(y_attacked);
+        Coordinates coord2 = new Coordinates();
+        coord2.setX(x_attacker);
+        coord2.setY(y_attacker);
+
+        // errors
+        int rowAttacker = getAttackerRow(x_attacker);
+        int rowAttacked;
+        int playerAttacked;
+
+        if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker) instanceof MinionCard) {
+            if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).isFrozen()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "cardUsesAbility");
+                node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                node.put("error", "Attacker card is frozen.");
+                output.add(node);
+                return;
+            }
+            if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).isAttack()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "cardUsesAbility");
+                node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                node.put("error", "Attacker card has already attacked this turn.");
+                output.add(node);
+                return;
+            }
+        }
+        if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getName().equals("Disciple")) {
+            if ((currentPlayer == 1 && (x_attacked == 0 || x_attacked == 1))
+                || (currentPlayer == 2 && (x_attacked == 2 || x_attacked == 3))) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "cardUsesAbility");
+                node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                node.put("error", "Attacked card does not belong to the current player.");
+                output.add(node);
+            } else {
+                playerAttacked = currentPlayer;
+                rowAttacked = getAttackedRow(x_attacked, playerAttacked);
+                healDisciple(rowAttacked, y_attacked);
+                if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker) instanceof MinionCard) {
+                    ((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).setAttack(true);
+                }
+            }
+        } else {
+            // MIRAJ/ RIPPER/ CURSED ONE
+            playerAttacked = getPlayerAttackedIdx();
+            rowAttacked = getAttackedRow(x_attacked, playerAttacked);
+
+            if ((currentPlayer == 1 && (x_attacked == 2 || x_attacked == 3))
+                    || (currentPlayer == 2 && (x_attacked == 0 || x_attacked == 1))) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "cardUsesAbility");
+                node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                node.put("error", "Attacked card does not belong to the enemy.");
+                output.add(node);
+                return;
+            } else {
+                // check TANK
+                if (player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getName().equals("Goliath")
+                    || player.get(playerAttacked - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getName().equals("Warden")) {
+                    abilityCard(playerAttacked, rowAttacker, rowAttacked, y_attacker, y_attacked);
+                } else {
+                    if (checkIfOtherTank(playerAttacked)) {
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        ObjectNode node = objectMapper.createObjectNode();
+                        node.put("command", "cardUsesAbility");
+                        node.set("cardAttacker", objectMapper.convertValue(coord2, JsonNode.class));
+                        node.set("cardAttacked", objectMapper.convertValue(coord1, JsonNode.class));
+                        node.put("error", "Attacked card is not of type 'Tank'.");
+                        output.add(node);
+                        return;
+                    } else {
+                        abilityCard(playerAttacked, rowAttacker, rowAttacked, y_attacker, y_attacked);
+                    }
+                }
+            }
+        }
+    }
+
+    public void abilityCard(final int playerAttacked, final int rowAttacker,
+                            final int rowAttacked, final int y_attacker, final int y_attacked) {
+            if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getName().equals("The Ripper")) {
+                int att = player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).getAttackDamage() - 2;
+                if (att < 0)
+                    att = 0;
+                player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).setAttackDamage(att);
+
+            } else if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getName().equals("Miraj")) {
+                int healthMiraj = player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getHealth();
+                int healthEnemy = player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).getHealth();
+
+                player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).setHealth(healthEnemy);
+                player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).setHealth(healthMiraj);
+
+            } else if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker).getName().equals("The Cursed One")) {
+                int healthEnemy = player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).getHealth();
+                int attackEnemy = player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).getAttackDamage();
+
+                player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).setHealth(attackEnemy);
+                player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).setAttackDamage(healthEnemy);
+
+                if (player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).get(y_attacked).getHealth() <= 0) {
+                    player.get(playerAttacked -1).getCardsInRow().get(rowAttacked).remove(y_attacked);
+                }
+            }
+        if (player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker) instanceof MinionCard) {
+            ((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(rowAttacker).get(y_attacker)).setAttack(true);
+        }
+    }
+
+    public void healDisciple(final int rowAttacked, final int y_attacked) {
+        int health = player.get(currentPlayer - 1).getCardsInRow().get(rowAttacked).get(y_attacked).getHealth() + 2;
+        player.get(currentPlayer - 1).getCardsInRow().get(rowAttacked).get(y_attacked).setHealth(health);
+    }
+
+    public void useAttackHero(final int x, final int y) {
+        Coordinates coord = new Coordinates();
+        coord.setX(x);
+        coord.setY(y);
+
+        int row = getAttackerRow(x);
+        int attackedPlayer = getPlayerAttackedIdx();
+
+        if (player.get(currentPlayer - 1).getCardsInRow().get(row).get(y) instanceof MinionCard) {
+            if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(row).get(y)).isFrozen()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "useAttackHero");
+                node.set("cardAttacker", objectMapper.convertValue(coord, JsonNode.class));
+                node.put("error", "Attacker card is frozen.");
+                output.add(node);
+                return;
+            }
+            if (((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(row).get(y)).isAttack()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectNode node = objectMapper.createObjectNode();
+                node.put("command", "useAttackHero");
+                node.set("cardAttacker", objectMapper.convertValue(coord, JsonNode.class));
+                node.put("error", "Attacker card has already attacked this turn.");
+                output.add(node);
+                return;
+            }
+        }
+
+        if (checkIfOtherTank(attackedPlayer)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("command", "useAttackHero");
+            node.set("cardAttacker", objectMapper.convertValue(coord, JsonNode.class));
+            node.put("error", "Attacked card is not of type 'Tank'.");
+            output.add(node);
+            return;
+        }
+
+        int damage = player.get(currentPlayer - 1).getCardsInRow().get(row).get(y).getAttackDamage();
+        int heroLife = player.get(attackedPlayer - 1).getHero().getHealth();
+
+        player.get(attackedPlayer - 1).getHero().setHealth(heroLife - damage);
+        if (player.get(currentPlayer - 1).getCardsInRow().get(row).get(y) instanceof MinionCard) {
+            ((MinionCard) player.get(currentPlayer - 1).getCardsInRow().get(row).get(y)).setAttack(true);
+        }
+
+        if ( player.get(attackedPlayer - 1).getHero().getHealth() <= 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode node = objectMapper.createObjectNode();
+            if (currentPlayer == 1) {
+                node.put("gameEnded", "Player one killed the enemy hero.");
+                winsPlayerOne++;
+            } else {
+                node.put("gameEnded", "Player two killed the enemy hero.");
+                winsPlayerTwo++;
+            }
+            gamesNumber++;
+            output.add(node);
+        }
+    }
+
+    public void useHeroAbility(final int affectedRow) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        int row;
+
+        if (player.get(currentPlayer - 1).getMana() < player.get(currentPlayer - 1).getHero().getMana()) {
+            node.put("command", "useHeroAbility");
+            node.put("affectedRow", affectedRow);
+            node.put("error", "Not enough mana to use hero's ability.");
+            output.add(node);
+            return;
+        }
+        if (player.get(currentPlayer - 1).getHero() instanceof HeroCard) {
+            if (((HeroCard) player.get(currentPlayer - 1).getHero()).isAbility()) {
+                node.put("command", "useHeroAbility");
+                node.put("affectedRow", affectedRow);
+                node.put("error", "Hero has already attacked this turn.");
+                output.add(node);
+                return;
+            }
+        }
+        if (player.get(currentPlayer - 1).getHero().getName().equals("Lord Royce")
+            || player.get(currentPlayer - 1).getHero().getName().equals("Empress Thorina")) {
+            if ((currentPlayer == 1 && (affectedRow == 2 || affectedRow == 3))
+                || (currentPlayer == 2 && (affectedRow == 0 || affectedRow == 1))) {
+                node.put("command", "useHeroAbility");
+                node.put("affectedRow", affectedRow);
+                node.put("error", "Selected row does not belong to the enemy.");
+                output.add(node);
+                return;
+            } else {
+                int attackedPlayer = getPlayerAttackedIdx();
+                row = getAttackedRow(affectedRow, attackedPlayer);
+                useHeroAbilityOnEnemy(row, attackedPlayer);
+            }
+        } else  if (player.get(currentPlayer - 1).getHero().getName().equals("General Kocioraw")
+                || player.get(currentPlayer - 1).getHero().getName().equals("King Mudface")) {
+            if ((currentPlayer == 1 && (affectedRow == 0 || affectedRow == 1))
+                    || (currentPlayer == 2 && (affectedRow == 2 || affectedRow == 3))) {
+                node.put("command", "useHeroAbility");
+                node.put("affectedRow", affectedRow);
+                node.put("error", "Selected row does not belong to the current player.");
+                output.add(node);
+                return;
+            } else {
+                row = getAttackedRow(affectedRow, currentPlayer);
+                useHeroAbilityOnSelf(row);
+            }
+        }
+        int newMana = player.get(currentPlayer - 1).getMana() - player.get(currentPlayer - 1).getHero().getMana();
+        player.get(currentPlayer - 1).setMana(newMana);
+    }
+
+    public void useHeroAbilityOnEnemy(final int row, final int attackedPlayer) {
+        if (player.get(currentPlayer - 1).getHero().getName().equals("Empress Thorina")) {
+            int index = 0;
+            int maxHealth = 0;
+            for (int i = 0; i < player.get(attackedPlayer - 1).getCardsInRow().get(row).size(); i++) {
+                if (player.get(attackedPlayer - 1).getCardsInRow().get(row).get(i).getHealth() > maxHealth) {
+                    maxHealth = player.get(attackedPlayer - 1).getCardsInRow().get(row).get(i).getHealth();
+                    index = i;
+                }
+            }
+            player.get(attackedPlayer - 1).getCardsInRow().get(row).remove(index);
+        } else {
+            // Lord Royce
+            int index = 0;
+            int maxDamage = -1;
+            for (int i = 0; i < player.get(attackedPlayer - 1).getCardsInRow().get(row).size(); i++) {
+                if (player.get(attackedPlayer - 1).getCardsInRow().get(row).get(i).getAttackDamage() > maxDamage) {
+                    maxDamage = player.get(attackedPlayer - 1).getCardsInRow().get(row).get(i).getAttackDamage();
+                    index = i;
+                }
+            }
+            if (player.get(attackedPlayer - 1).getCardsInRow().get(row).get(index) instanceof MinionCard) {
+                ((MinionCard) player.get(attackedPlayer - 1).getCardsInRow().get(row).get(index)).setFrozen(true);
+            }
+        }
+        if (player.get(currentPlayer - 1).getHero() instanceof HeroCard) {
+            ((HeroCard) player.get(currentPlayer - 1).getHero()).setAbility(true);
+        }
+    }
+
+    public void useHeroAbilityOnSelf(final int row) {
+        int value = 0;
+        if (player.get(currentPlayer - 1).getHero().getName().equals("King Mudface")) {
+            for (int i = 0; i < player.get(currentPlayer - 1).getCardsInRow().get(row).size(); i++) {
+                value = player.get(currentPlayer - 1).getCardsInRow().get(row).get(i).getHealth() + 1;
+                player.get(currentPlayer - 1).getCardsInRow().get(row).get(i).setHealth(value);
+            }
+        } else {
+            // General Kocioraw
+            for (int i = 0; i < player.get(currentPlayer - 1).getCardsInRow().get(row).size(); i++) {
+                value = player.get(currentPlayer - 1).getCardsInRow().get(row).get(i).getAttackDamage() + 1;
+                player.get(currentPlayer - 1).getCardsInRow().get(row).get(i).setAttackDamage(value);
+            }
+        }
+        if (player.get(currentPlayer - 1).getHero() instanceof HeroCard) {
+            ((HeroCard) player.get(currentPlayer - 1).getHero()).setAbility(true);
+        }
+    }
+
+    public void getTotalGamesPlayed() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getTotalGamesPlayed");
+        node.put("output", gamesNumber);
+        output.add(node);
+    }
+
+    public void getPlayerOneWins() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getPlayerOneWins");
+        node.put("output", winsPlayerOne);
+        output.add(node);
+    }
+
+    public void getPlayerTwoWins() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("command", "getPlayerTwoWins");
+        node.put("output", winsPlayerTwo);
+        output.add(node);
+    }
+
+    public int getPlayerAttackedIdx() {
+        if (currentPlayer == 1)
+            return 2;
+        return 1;
+    }
+
+    public int getAttackerRow(final int x) {
+        if (currentPlayer == 2) {
+            if (x == 0)
+                return 1;
+            return 0;
+        } else {
+            if (x == 2)
+                return 0;
+            return 1;
+        }
+    }
+
+    public int getAttackedRow(final int x, final int playerIdx) {
+        if (playerIdx == 1) {
+            if (x == 2)
+                return 0;
+            return 1;
+        } else {
+            if (x == 0)
+                return 1;
+            return 0;
+        }
     }
 
     public ArrayList<GameActions> getGameActions() {
@@ -509,19 +993,27 @@ public class Gameplay {
         this.endTurn = endTurn;
     }
 
-    public int getFrozenPlayer() {
-        return frozenPlayer;
+    public int getWinsPlayerOne() {
+        return winsPlayerOne;
     }
 
-    public void setFrozenPlayer(final int frozenPlayer) {
-        this.frozenPlayer = frozenPlayer;
+    public void setWinsPlayerOne(final int winsPlayerOne) {
+        this.winsPlayerOne = winsPlayerOne;
     }
 
-    public int getFrozenRow() {
-        return frozenRow;
+    public int getWinsPlayerTwo() {
+        return winsPlayerTwo;
     }
 
-    public void setFrozenRow(int frozenRow) {
-        this.frozenRow = frozenRow;
+    public void setWinsPlayerTwo(final int winsPlayerTwo) {
+        this.winsPlayerTwo = winsPlayerTwo;
+    }
+
+    public int getGamesNumber() {
+        return gamesNumber;
+    }
+
+    public void setGamesNumber(final int gamesNumber) {
+        this.gamesNumber = gamesNumber;
     }
 }

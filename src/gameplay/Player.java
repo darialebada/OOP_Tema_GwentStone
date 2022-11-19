@@ -1,5 +1,6 @@
 package gameplay;
 
+import actions.PrepareGame;
 import cards.Card;
 
 import java.util.ArrayList;
@@ -11,11 +12,14 @@ public class Player {
     private Card hero;
     private int mana;
 
-    public Player(final ArrayList<Card> deck, final Card hero) {
+    public Player(final ArrayList<Card> deck1, final Card hero) {
         this.cardsInRow = new ArrayList<ArrayList<Card>>(2);
         this.cardsInRow.add(new ArrayList<Card>());
         this.cardsInRow.add(new ArrayList<Card>());
-        this.deck = new ArrayList<Card>(deck);
+        this.deck = new ArrayList<Card>();
+        for (int i = 0; i < deck1.size(); i++) {
+            this.deck.add(PrepareGame.prepareCard_again(deck1.get(i)));
+        }
         this.cardsInHand = new ArrayList<Card>();
         this.hero = hero;
         this.mana = 1;

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 
-@JsonIgnoreProperties({ "row", "frozen", "type", "ability" })
+@JsonIgnoreProperties({ "row", "frozen", "type", "attack" })
 public class MinionCard extends Card {
     private int row;
     private boolean frozen;
-    private boolean ability;
+    private boolean attack;
 
     public MinionCard(final int mana, final int attackDamange, final int health,
                       final String description, final ArrayList<String> colors,
@@ -17,7 +17,7 @@ public class MinionCard extends Card {
         this.row = row;
         this.frozen = false;
         this.setType("Minion");
-        this.ability = false;
+        this.attack = false;
     }
 
     public int getRow() {
@@ -36,20 +36,12 @@ public class MinionCard extends Card {
         this.frozen = frozen;
     }
 
-    public boolean isAbility() {
-        return ability;
+    public boolean isAttack() {
+        return attack;
     }
 
-    public void setAbility(final boolean ability) {
-        this.ability = ability;
+    public void setAttack(boolean attack) {
+        this.attack = attack;
     }
 
-    @Override
-    public String toString() {
-        return "MinionCard{" +
-                "row=" + row +
-                ", frozen=" + frozen +
-                ", ability=" + ability +
-                '}' + super.getName();
-    }
 }

@@ -75,6 +75,41 @@ public class PrepareGame {
         return card;
     }
 
+    public static Card prepareCard_again(final Card readCard) {
+        Card card;
+        if (readCard.getName().equals("Sentinel")
+                || readCard.getName().equals("Berserker")
+                || readCard.getName().equals("The Cursed One")
+                || readCard.getName().equals("Disciple")) {
+
+            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                    readCard.getHealth(), readCard.getDescription(),
+                    readCard.getColors(), readCard.getName(), 2);
+
+        } else if (readCard.getName().equals("The Ripper")
+                || readCard.getName().equals("Miraj")
+                || readCard.getName().equals("Goliath")
+                || readCard.getName().equals("Warden")) {
+
+            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                    readCard.getHealth(), readCard.getDescription(),
+                    readCard.getColors(), readCard.getName(), 1);
+
+        } else if (readCard.getName().equals("Firestorm")
+                || readCard.getName().equals("Winterfell")
+                || readCard.getName().equals("Heart Hound")) {
+
+            card = new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
+                    readCard.getHealth(), readCard.getDescription(),
+                    readCard.getColors(), readCard.getName());
+        } else {
+            card = new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
+                    readCard.getHealth(), readCard.getDescription(),
+                    readCard.getColors(), readCard.getName());
+        }
+        return card;
+    }
+
     /**
      * function to parse the commands given for the current game
      */
