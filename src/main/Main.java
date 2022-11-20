@@ -74,12 +74,14 @@ public final class Main {
 
         ArrayNode output = objectMapper.createArrayNode();
 
-        //TODO add here the entry point to your implementation
+        /* Save data for each player */
+
         ArrayList<ArrayList<Card>> decksPlayerOne
                 = PrepareGame.prepareDecks(inputData.getPlayerOneDecks());
         ArrayList<ArrayList<Card>> decksPlayerTwo
                 = PrepareGame.prepareDecks(inputData.getPlayerTwoDecks());
 
+        /* Info about each game */
         ArrayList<GameActions> gameActions = PrepareGame.prepareActions(inputData.getGames());
 
         Gameplay gameplay = new Gameplay(gameActions, output);

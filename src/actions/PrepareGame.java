@@ -12,7 +12,7 @@ import fileio.StartGameInput;
 
 import java.util.ArrayList;
 
-public class PrepareGame {
+public final class PrepareGame {
     private PrepareGame() {
     }
 
@@ -22,10 +22,10 @@ public class PrepareGame {
      * @return decks for each player
      */
     public static ArrayList<ArrayList<Card>> prepareDecks(final DecksInput decksInput) {
-        ArrayList<ArrayList<Card>> decksPlayer = new ArrayList<ArrayList<Card>>();
+        ArrayList<ArrayList<Card>> decksPlayer = new ArrayList<>();
         for (int i = 0; i < decksInput.getNrDecks(); i++) {
             // get each deck
-            ArrayList<Card> newDeck = new ArrayList<Card>();
+            ArrayList<Card> newDeck = new ArrayList<>();
             ArrayList<CardInput> readDeck = decksInput.getDecks().get(i);
             for (int j = 0; j < decksInput.getNrCardsInDeck(); j++) {
                 newDeck.add(prepareCard(readDeck.get(j)));
@@ -36,107 +36,76 @@ public class PrepareGame {
     }
 
     /**
-     * function that creates a card
-     * @param readCard
-     * @return
+     * function that creates a card from CardInput
      */
     public static Card prepareCard(final CardInput readCard) {
-        Card card;
-        if (readCard.getName().equals("Sentinel")
-            || readCard.getName().equals("Berserker")
-            || readCard.getName().equals("The Cursed One")
-            || readCard.getName().equals("Disciple")) {
-
-            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
-                                readCard.getHealth(), readCard.getDescription(),
-                                readCard.getColors(), readCard.getName(), 2);
-
-        } else if (readCard.getName().equals("The Ripper")
-                   || readCard.getName().equals("Miraj")
-                   || readCard.getName().equals("Goliath")
-                   || readCard.getName().equals("Warden")) {
-
-            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
-                    readCard.getHealth(), readCard.getDescription(),
-                    readCard.getColors(), readCard.getName(), 1);
-
-        } else if (readCard.getName().equals("Firestorm")
-                   || readCard.getName().equals("Winterfell")
-                   || readCard.getName().equals("Heart Hound")) {
-
-            card = new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
+        return switch (readCard.getName()) {
+            case "Sentinel", "Berserker", "The Cursed One", "Disciple" ->
+                    new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName(), 2);
+            case "The Ripper", "Miraj", "Goliath", "Warden" ->
+                    new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName(), 1);
+            case "Firestorm", "Winterfell", "Heart Hound" ->
+                    new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName());
+            default -> new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
                     readCard.getHealth(), readCard.getDescription(),
                     readCard.getColors(), readCard.getName());
-        } else {
-            card = new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
-                    readCard.getHealth(), readCard.getDescription(),
-                    readCard.getColors(), readCard.getName());
-        }
-        return card;
+        };
     }
 
-    public static Card prepareCard_again(final Card readCard) {
-        Card card;
-        if (readCard.getName().equals("Sentinel")
-                || readCard.getName().equals("Berserker")
-                || readCard.getName().equals("The Cursed One")
-                || readCard.getName().equals("Disciple")) {
-
-            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
-                    readCard.getHealth(), readCard.getDescription(),
-                    readCard.getColors(), readCard.getName(), 2);
-
-        } else if (readCard.getName().equals("The Ripper")
-                || readCard.getName().equals("Miraj")
-                || readCard.getName().equals("Goliath")
-                || readCard.getName().equals("Warden")) {
-
-            card = new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
-                    readCard.getHealth(), readCard.getDescription(),
-                    readCard.getColors(), readCard.getName(), 1);
-
-        } else if (readCard.getName().equals("Firestorm")
-                || readCard.getName().equals("Winterfell")
-                || readCard.getName().equals("Heart Hound")) {
-
-            card = new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
+    /**
+     * function that creates a card (for deep-copy)
+     */
+    public static Card prepareCardNewGame(final Card readCard) {
+        return switch (readCard.getName()) {
+            case "Sentinel", "Berserker", "The Cursed One", "Disciple" ->
+                    new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName(), 2);
+            case "The Ripper", "Miraj", "Goliath", "Warden" ->
+                    new MinionCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName(), 1);
+            case "Firestorm", "Winterfell", "Heart Hound" ->
+                    new EnvironmentCard(readCard.getMana(), readCard.getAttackDamage(),
+                            readCard.getHealth(), readCard.getDescription(),
+                            readCard.getColors(), readCard.getName());
+            default -> new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
                     readCard.getHealth(), readCard.getDescription(),
                     readCard.getColors(), readCard.getName());
-        } else {
-            card = new HeroCard(readCard.getMana(), readCard.getAttackDamage(),
-                    readCard.getHealth(), readCard.getDescription(),
-                    readCard.getColors(), readCard.getName());
-        }
-        return card;
+        };
     }
 
     /**
      * function to parse the commands given for the current game
      */
     public static ArrayList<GameActions> prepareActions(final ArrayList<GameInput> readGame) {
-        ArrayList<GameActions> games = new ArrayList<GameActions>();
-        for (int i = 0; i < readGame.size(); i++) {
-            StartGameInput readStartGame = readGame.get(i).getStartGame();
-            // create startGame array
+        ArrayList<GameActions> games = new ArrayList<>();
+        for (GameInput gameInput : readGame) {
+            StartGameInput readStartGame = gameInput.getStartGame();
+            /* create startGame array */
             StartGame startGame = new StartGame(readStartGame.getPlayerOneDeckIdx(),
-                                                readStartGame.getPlayerTwoDeckIdx(),
-                                                readStartGame.getShuffleSeed(),
-                                                prepareCard(readStartGame.getPlayerOneHero()),
-                                                prepareCard(readStartGame.getPlayerTwoHero()),
-                                                readStartGame.getStartingPlayer());
+                    readStartGame.getPlayerTwoDeckIdx(),
+                    readStartGame.getShuffleSeed(),
+                    prepareCard(readStartGame.getPlayerOneHero()),
+                    prepareCard(readStartGame.getPlayerTwoHero()),
+                    readStartGame.getStartingPlayer());
             GameActions ggame = new GameActions();
             ggame.setStartGame(startGame);
-            ArrayList<Action> actions = new ArrayList<Action>();
-            for (int j = 0; j < readGame.get(i).getActions().size(); j++) {
-                ActionsInput readActions = readGame.get(i).getActions().get(j);
-                // create action array
+            ArrayList<Action> actions = new ArrayList<>();
+            for (int j = 0; j < gameInput.getActions().size(); j++) {
+                ActionsInput readActions = gameInput.getActions().get(j);
+                /* create action array */
                 Action act = new Action(readActions.getCommand(),
-                                        readActions.getHandIdx(),
-                                        readActions.getCardAttacker(),
-                                        readActions.getCardAttacked(),
-                                        readActions.getAffectedRow(),
-                                        readActions.getPlayerIdx(),
-                                        readActions.getX(), readActions.getY());
+                        readActions.getHandIdx(), readActions.getCardAttacker(),
+                        readActions.getCardAttacked(), readActions.getAffectedRow(),
+                        readActions.getPlayerIdx(), readActions.getX(),
+                        readActions.getY());
                 actions.add(act);
             }
             ggame.setActions(actions);

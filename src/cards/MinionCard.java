@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 
 @JsonIgnoreProperties({ "row", "frozen", "type", "attack" })
-public class MinionCard extends Card {
-    private int row;
+public final class MinionCard extends Card {
+    private final int row;
     private boolean frozen;
     private boolean attack;
 
-    public MinionCard(final int mana, final int attackDamange, final int health,
+    public MinionCard(final int mana, final int attackDamage, final int health,
                       final String description, final ArrayList<String> colors,
                       final String name, final int row) {
-        super(mana, attackDamange, health, description, colors, name);
+        super(mana, attackDamage, health, description, colors, name);
         this.row = row;
         this.frozen = false;
         this.setType("Minion");
@@ -22,10 +22,6 @@ public class MinionCard extends Card {
 
     public int getRow() {
         return row;
-    }
-
-    public void setRow(final int row) {
-        this.row = row;
     }
 
     public boolean isFrozen() {
@@ -40,7 +36,7 @@ public class MinionCard extends Card {
         return attack;
     }
 
-    public void setAttack(boolean attack) {
+    public void setAttack(final boolean attack) {
         this.attack = attack;
     }
 

@@ -2,7 +2,7 @@ package actions;
 
 import java.util.ArrayList;
 
-public class GameActions {
+public final class GameActions {
     private StartGame startGame;
     private ArrayList<Action> actions;
 
