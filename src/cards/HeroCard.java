@@ -2,6 +2,7 @@ package cards;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import helpers.MagicNumber;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public final class HeroCard extends Card {
                     final String name) {
         super(mana, attackDamage, health, description, colors, name);
         this.setAttackDamage(0);
-        this.setHealth(30);
+        this.setHealth(MagicNumber.THIRTY);
         this.setType("Hero");
         this.ability = false;
     }

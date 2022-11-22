@@ -75,7 +75,6 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         /* Save data for each player */
-
         ArrayList<ArrayList<Card>> decksPlayerOne
                 = PrepareGame.prepareDecks(inputData.getPlayerOneDecks());
         ArrayList<ArrayList<Card>> decksPlayerTwo
