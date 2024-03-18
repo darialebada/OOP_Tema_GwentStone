@@ -1,6 +1,10 @@
 ### Lebădă Daria-Cristiana, 323CA ###
 ## OOP_Tema_GwentStone ##
 
+# Introducere
+Se simuleaza un joc de carti (2 jucatori) care contine elemente din
+jocurile Hearthstone și Gwent.
+
 # Clasele implementate
 Am implementat propria clasă Card pentru stocarea informațiilor
 pentru fiecare carte. Aceasta este moștenită de alte 3 clase,
